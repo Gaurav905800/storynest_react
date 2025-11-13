@@ -6,10 +6,9 @@ function Card({ title, id, image, content, category, tags, date }) {
   return (
     <div
       className="card"
-      onClick={() => navigate(`/blog/${id}`)} // ✅ navigate on click
+      onClick={() => navigate(`/blog/${id}`)}
       style={{ cursor: "pointer" }}
     >
-      {/* --- Image or Placeholder --- */}
       {image ? (
         <div className="card__image">
           <img
@@ -26,14 +25,17 @@ function Card({ title, id, image, content, category, tags, date }) {
         </div>
       )}
 
-      {/* --- Content --- */}
       <div className="card__content">
         <p className="card__title">{title}</p>
         <p className="card__description">{content}</p>
 
         <div className="card__meta">
           <span className="card__category">{category || "General"}</span>
-          {tags && <span className="card__tags">{tags}</span>}
+          {tags && (
+            <span className="card__tags">
+              {Array.isArray(tags) ? tags[0] : tags.split(",")[0]?.trim()}
+            </span>
+          )}
         </div>
 
         <div className="card__date">{date}</div>

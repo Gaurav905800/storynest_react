@@ -17,7 +17,6 @@ function Navbar() {
     if (token) dispatch(getUser());
   }, [dispatch]);
 
-  // Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -39,7 +38,7 @@ function Navbar() {
     `${linkBase} ${isActive ? linkActive : linkInactive}`;
 
   const commonLinks = [
-    { to: "/", label: "Home", end: true },
+    { to: "/home", label: "Home", end: true },
     { to: "/add-blog", label: "Publish" },
     { to: "/about", label: "About Us" },
     { to: "/contact", label: "Contact" },
@@ -53,9 +52,8 @@ function Navbar() {
     <div
       onClick={toggleDropdown}
       className="w-9 h-9 flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold cursor-pointer hover:scale-105 transition-transform"
-      title={user?.name || user?.email}
     >
-      {(user?.name || user?.email)?.charAt(0).toUpperCase()}
+      {user?.email?.charAt(0).toUpperCase()}
     </div>
   );
 
@@ -69,7 +67,7 @@ function Navbar() {
       <div className="mx-auto max-w-7xl px-4">
         <nav className="flex h-16 items-center justify-between relative">
           <Link
-            to="/"
+            to="/home"
             className="text-2xl font-bold tracking-wider text-white hover:text-indigo-400 transition-colors z-30"
             onClick={() => setIsOpen(false)}
           >
@@ -114,7 +112,6 @@ function Navbar() {
             )}
           </ul>
 
-          {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMenu}
             className="md:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors z-30"
@@ -125,7 +122,6 @@ function Navbar() {
         </nav>
       </div>
 
-      {/* Mobile Menu */}
       <div
         className={`md:hidden absolute top-0 left-0 w-full bg-gray-900/95 backdrop-blur-sm transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -150,7 +146,6 @@ function Navbar() {
             </li>
           ))}
 
-          {/* Mobile Avatar + Dropdown */}
           {user && (
             <li className="px-4 pt-4">
               <div className="flex flex-col items-start gap-2">

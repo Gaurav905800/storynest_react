@@ -26,6 +26,14 @@ export const detailBlog = createAsyncThunk("blogs/detail", async (id) => {
   return data;
 });
 
+export const editBlog = createAsyncThunk(
+  "blogs/edit",
+  async ({ id, formData, token }) => {
+    const data = await updateBlog(id, formData, token);
+    return data;
+  }
+);
+
 // Delete a blog
 export const removeBlog = createAsyncThunk(
   "blogs/delete",
@@ -90,6 +98,22 @@ const blogSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Something went wrong!";
       })
+      // edit blog
+      .addCase(editBlog.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editBlog.fulfilled, (state, action) => {
+        state.loading = false;
+        state.blogs = state.blogs.filter(
+          (blog) => blog.id !== action.payload.id
+        );
+      })
+      .addCase(editBlog.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Something went wrong!";
+      })
+      // detail blog
       .addCase(detailBlog.pending, (state) => {
         state.loading = true;
         state.error = null;

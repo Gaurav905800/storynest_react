@@ -4,7 +4,7 @@ import { fetchBlogs } from "../redux/slice/blogSlice";
 import Button from "../components/custom/Button";
 import Loader from "../components/custom/Loader";
 import { Search } from "lucide-react";
-import Card from "../components/custom/card";
+import Card from "../components/custom/Card";
 
 function Home() {
   const dispatch = useDispatch();

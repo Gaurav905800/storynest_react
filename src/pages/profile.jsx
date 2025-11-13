@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBlogs, removeBlog } from "../redux/slice/blogSlice";
 import { getUser } from "../redux/slice/authSlice";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/custom/Loader";
 import Button from "../components/custom/Button";
 import UpdateButton from "../components/custom/UpdateButton";
 
 function Profile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user, loading: authLoading } = useSelector((state) => state.auth);
   const {
@@ -43,20 +45,17 @@ function Profile() {
     (blog) => blog?.author && user?.id && blog.author.toString() === user.id
   );
 
-  // ✅ Handlers for delete/update
-  const handleDelete = (id, token) => {
+  const handleDelete = (id) => {
     dispatch(removeBlog({ id, token }));
-    console.log(id);
   };
 
   const handleUpdate = (id) => {
-    // TODO: Navigate to update page or open modal
-    console.log("Update blog with id:", id);
+    navigate(`/edit-blog/${id}`); // 👈 go to edit page
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6 md:px-12 lg:px-20">
-      {/* User Info Section */}
+      {/* User Info */}
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           {user.username || "User"}'s Profile
@@ -114,13 +113,16 @@ function Profile() {
                 {/* ✅ Action Buttons */}
                 <div className="mt-4 flex gap-2">
                   <Button
-                    onClick={() => handleDelete(blog._id, token)}
+                    onClick={() => handleDelete(blog._id)}
                     className="flex-1 bg-red-500 hover:bg-red-600 text-white"
                   >
                     Delete
                   </Button>
 
-                  <UpdateButton />
+                  <UpdateButton
+                    onClick={() => handleUpdate(blog._id)}
+                    className="flex-1"
+                  />
                 </div>
               </div>
             </div>

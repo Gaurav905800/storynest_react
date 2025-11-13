@@ -17,7 +17,7 @@ export default function AuthPage() {
   const { user, loading, error } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate("/home");
   }, [user, navigate]);
 
   const handleModeSwitch = (newMode) => {

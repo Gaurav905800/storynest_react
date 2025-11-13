@@ -34,7 +34,7 @@ const BlogDetail = () => {
     );
 
   return (
-    <div className="min-h-screen max-w-4xl mx-auto py-10 px-4">
+    <div className="max-w-4xl mx-auto py-10 px-4">
       <h1 className="text-4xl font-bold mb-4">{selectedBlog.title}</h1>
 
       {selectedBlog.image && (

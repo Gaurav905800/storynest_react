@@ -1,5 +1,6 @@
 import axios from "axios";
-const baseUrl = "https://storynest-backend-0ikp.onrender.com/api/blogs";
+// const baseUrl = "https://storynest-backend-0ikp.onrender.com/api/blogs";
+const baseUrl = "http://localhost:8000/api/blogs";
 
 export const getAllBlogs = async () => {
   const response = await axios.get(`${baseUrl}`);
@@ -22,10 +23,11 @@ export const getBlogById = async (id) => {
   return response.data;
 };
 
-export const updateBlog = async (id, formData) => {
+export const updateBlog = async (id, formData, token) => {
   const response = await axios.patch(`${baseUrl}/${id}`, formData, {
     headers: {
-      "Content:Type": "multipart/form-data",
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
     },
   });
 
