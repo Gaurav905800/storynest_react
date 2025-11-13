@@ -1,6 +1,6 @@
 import axios from "axios";
-// const baseUrl = "https://storynest-backend-0ikp.onrender.com/api/blogs";
-const baseUrl = "http://localhost:8000/api/blogs";
+const baseUrl = "https://storynest-backend-0ikp.onrender.com/api/blogs";
+// const baseUrl = "http://localhost:8000/api/blogs";
 
 export const getAllBlogs = async () => {
   const response = await axios.get(`${baseUrl}`);

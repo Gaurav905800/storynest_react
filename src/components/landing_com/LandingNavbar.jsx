@@ -1,10 +1,26 @@
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LandingNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  let isLoggedIn = false;
+  try {
+    if (auth) {
+      isLoggedIn = Boolean(auth.user || auth.token);
+    }
+  } catch (e) {
+    isLoggedIn = false;
+  }
+
+  if (!isLoggedIn) {
+    const lsToken =
+      typeof window !== "undefined" && localStorage.getItem("token");
+    isLoggedIn = Boolean(lsToken);
+  }
 
   const navLinks = [
     { name: "Home", to: "/" },
@@ -20,6 +36,22 @@ export default function LandingNavbar() {
         element.scrollIntoView({ behavior: "smooth" });
       }
     }
+    setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    try {
+      if (auth && typeof auth.logout === "function") {
+        auth.logout();
+      }
+    } catch (e) {}
+
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth");
+    } catch (e) {}
+
+    navigate("/");
     setIsOpen(false);
   };
 
@@ -51,12 +83,40 @@ export default function LandingNavbar() {
               {link.name}
             </Link>
           ))}
-          <Link
-            to="/auth"
-            className="px-5 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-all duration-300"
-          >
-            Login
-          </Link>
+
+          {/* Conditionally render Login button only when NOT logged in */}
+          {!isLoggedIn ? (
+            <Link
+              to="/auth"
+              className="px-5 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-all duration-300"
+            >
+              Login
+            </Link>
+          ) : (
+            <div className="relative group">
+              <button className="flex items-center gap-2 px-5 py-2 border border-purple-600 text-purple-600 rounded-full hover:bg-purple-50 transition-all duration-300">
+                <span>Account</span>
+              </button>
+
+              {/* Dropdown */}
+              <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-xl border border-gray-200 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                <Link
+                  to="/home"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-t-xl"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-b-xl"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Always show CTA */}
           <Link
             to="/home"
             className="px-5 py-2 border border-purple-600 text-purple-600 rounded-full hover:bg-purple-50 transition-all duration-300"
@@ -92,14 +152,34 @@ export default function LandingNavbar() {
               {link.name}
             </Link>
           ))}
+
           <div className="flex flex-col gap-2 pt-3 border-t border-gray-200">
-            <Link
-              to="/auth"
-              onClick={() => setIsOpen(false)}
-              className="px-4 py-2 bg-purple-600 text-white text-center rounded-full hover:bg-purple-600 transition-all duration-300"
-            >
-              Login
-            </Link>
+            {!isLoggedIn ? (
+              <Link
+                to="/auth"
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 bg-purple-600 text-white text-center rounded-full hover:bg-purple-600 transition-all duration-300"
+              >
+                Login
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/home"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 text-center rounded-full hover:bg-gray-50 transition-all duration-300 border border-gray-200"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-center rounded-full border border-gray-200 hover:bg-gray-50"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+
             <Link
               to="/home"
               onClick={() => setIsOpen(false)}
