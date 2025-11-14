@@ -12,17 +12,15 @@ import Landing from "../pages/landing/Landing";
 import LandingNavbar from "../components/landing_com/LandingNavbar";
 import EditBlog from "../pages/EditBlog";
 
-// ✅ Layout component (handles navbar + routes + sticky footer)
 function Layout() {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
+  const isAuthPage = location.pathname === "/auth";
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Conditional Navbar */}
       {isLandingPage ? <LandingNavbar /> : <Navbar />}
 
-      {/* Main content area */}
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -36,8 +34,8 @@ function Layout() {
         </Routes>
       </main>
 
-      {/* Sticky Footer */}
-      <Foot />
+      {/* Hide footer on auth page */}
+      {!isAuthPage && <Foot />}
     </div>
   );
 }

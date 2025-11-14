@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, signUpUser } from "../../redux/slice/authSlice";
+import { loginUser, signUpUser, clearError } from "../../redux/slice/authSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
@@ -18,6 +18,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (user) navigate("/home");
+    dispatch(clearError());
   }, [user, navigate]);
 
   const handleModeSwitch = (newMode) => {
