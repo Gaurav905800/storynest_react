@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://storynest-backend-0ikp.onrender.com/api/auth";
-// const API_URL = "http://localhost:8000/api/auth";
+// const API_URL = "https://storynest-backend-0ikp.onrender.com/api/auth";
+const API_URL = "http://localhost:8000/api/auth";
 
 export const signUp = async (userData) => {
   const response = await axios.post(`${API_URL}/signup`, userData);

@@ -45,8 +45,9 @@ function Profile() {
     (blog) => blog?.author && user?.id && blog.author.toString() === user.id
   );
 
-  const handleDelete = (id) => {
-    dispatch(removeBlog({ id, token }));
+  const handleDelete = async (id) => {
+    await dispatch(removeBlog({ id, token }));
+    dispatch(fetchBlogs());
   };
 
   const handleUpdate = (id) => {

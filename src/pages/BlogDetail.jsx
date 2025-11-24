@@ -10,10 +10,7 @@ const BlogDetail = () => {
   const { selectedBlog, loading, error } = useSelector((state) => state.blogs);
 
   useEffect(() => {
-    console.log("Blog ID from params:", id);
-    dispatch(detailBlog(id)).then((res) => {
-      console.log("Detail Blog Response:", res);
-    });
+    dispatch(detailBlog(id));
   }, [id, dispatch]);
 
   if (loading)
@@ -34,31 +31,41 @@ const BlogDetail = () => {
     );
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-4">{selectedBlog.title}</h1>
+    <div className="min-h-screen bg-gray-50 px-6">
+      <div className="max-w-6xl mx-auto py-10">
+        {/* Category + Date */}
+        <div className="flex justify-between items-center text-gray-500 text-sm mb-4">
+          <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
+            {selectedBlog.category}
+          </span>
+          <span>
+            {new Date(selectedBlog.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        </div>
 
-      {selectedBlog.image && (
-        <img
-          src={selectedBlog.image}
-          alt={selectedBlog.title}
-          className="w-full rounded-xl mb-6"
-        />
-      )}
+        {/* Title */}
+        <h1 className="text-3xl font-bold text-gray-900 mb-6 leading-snug">
+          {selectedBlog.title}
+        </h1>
 
-      <div className="flex justify-between items-center text-gray-500 text-sm mb-4">
-        <span>{selectedBlog.category}</span>
-        <span>
-          {new Date(selectedBlog.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
-        </span>
+        {/* Image */}
+        {selectedBlog.image && (
+          <img
+            src={selectedBlog.image}
+            alt={selectedBlog.title}
+            className="w-full max-h-[600px] object-cover rounded-xl mb-8 shadow"
+          />
+        )}
+
+        {/* Content */}
+        <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-line tracking-wide pb-10">
+          {selectedBlog.content}
+        </p>
       </div>
-
-      <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-        {selectedBlog.content}
-      </p>
     </div>
   );
 };

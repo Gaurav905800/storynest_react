@@ -89,10 +89,8 @@ const blogSlice = createSlice({
         state.error = null;
       })
       .addCase(removeBlog.fulfilled, (state, action) => {
-        state.loading = false;
-        state.blogs = state.blogs.filter(
-          (blog) => blog.id !== action.payload.id
-        );
+        const id = action.payload.id;
+        state.blogs = state.blogs.filter((blog) => blog._id !== id);
       })
       .addCase(removeBlog.rejected, (state, action) => {
         state.loading = false;

@@ -41,7 +41,6 @@ function AddBlog() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        // 2MB limit
         setValidationError((prev) => ({
           ...prev,
           image: "Image size must be less than 2MB.",
@@ -82,9 +81,8 @@ function AddBlog() {
       setValidationError(errors);
       return;
     }
-    setValidationError({}); // Clear previous errors
+    setValidationError({});
 
-    // 2. Prepare FormData
     const formData = new FormData();
     formData.append("title", title.trim());
     formData.append("content", content.trim());
@@ -94,33 +92,30 @@ function AddBlog() {
         tags
           .split(",")
           .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0) // Filter out empty tags
+          .filter((tag) => tag.length > 0)
       )
     );
     formData.append("category", category);
     formData.append("published", published);
     if (imageFile) formData.append("image", imageFile);
 
-    // 3. Dispatch Redux action
     dispatch(addBlog({ formData, token }))
       .unwrap()
       .then(() => {
         setSuccess(true);
         resetForm();
-        setTimeout(() => navigate("/"), 1500);
-        setTimeout(() => setSuccess(false), 5000); // Hide success message after 5 seconds
+        setTimeout(() => navigate("/home"), 1500);
+        setTimeout(() => setSuccess(false), 5000);
       })
-      .catch(() => setSuccess(false)); // Success will be false on error
+      .catch(() => setSuccess(false));
   };
 
-  // Utility to display error messages
   const ErrorMessage = ({ message }) => (
     <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
       <XCircle className="w-4 h-4" /> {message}
     </p>
   );
 
-  // Shared input styling
   const inputClass = (field) =>
     `border mt-1 px-4 py-3 text-base rounded-lg shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-150 ${
       validationError[field] ? "border-red-500" : "border-gray-300"
@@ -136,9 +131,7 @@ function AddBlog() {
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-        {/* Title and Content (Primary Focus) */}
         <div className="flex flex-col gap-6">
-          {/* Title */}
           <div className="flex flex-col">
             <label className="text-lg font-semibold text-gray-700">Title</label>
             <input
@@ -155,7 +148,6 @@ function AddBlog() {
             )}
           </div>
 
-          {/* Content */}
           <div className="flex flex-col">
             <label className="text-lg font-semibold text-gray-700">
               Content
@@ -174,11 +166,8 @@ function AddBlog() {
           </div>
         </div>
 
-        {/* --- Metadata Section (Two-Column Layout) --- */}
         <div className="grid md:grid-cols-2 gap-8 border-t pt-8 border-gray-100">
-          {/* Left Column */}
           <div className="flex flex-col gap-6">
-            {/* Category */}
             <div className="flex flex-col">
               <label className="text-lg font-semibold text-gray-700 flex items-center gap-2">
                 <ClipboardList className="w-5 h-5 text-indigo-500" /> Category
@@ -281,7 +270,6 @@ function AddBlog() {
           </div>
         </div>
 
-        {/* --- Submission and Feedback --- */}
         <div className="pt-6 border-t border-gray-100 flex flex-col items-center">
           <button
             type="submit"
