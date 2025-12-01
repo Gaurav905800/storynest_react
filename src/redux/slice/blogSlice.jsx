@@ -5,6 +5,7 @@ import {
   getBlogById,
   deleteBlog,
   updateBlog,
+  toggleLike,
 } from "../../services/BlogServices";
 
 // Fetch all blogs
@@ -34,12 +35,19 @@ export const editBlog = createAsyncThunk(
   }
 );
 
-// Delete a blog
 export const removeBlog = createAsyncThunk(
   "blogs/delete",
   async ({ id, token }) => {
     await deleteBlog(id, token);
     return { id };
+  }
+);
+
+export const likeBlog = createAsyncThunk(
+  "blogs/like",
+  async ({ id, token }) => {
+    const res = await toggleLike(id, token);
+    return { id, likes: res.likes, likedUsers: res.likedUsers };
   }
 );
 
@@ -68,7 +76,6 @@ const blogSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-
       // Add blog
       .addCase(addBlog.pending, (state) => {
         state.loading = true;
@@ -81,6 +88,18 @@ const blogSlice = createSlice({
       .addCase(addBlog.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Something went wrong!";
+      })
+      .addCase(likeBlog.fulfilled, (state, action) => {
+        const { id, likes, likedUsers } = action.payload;
+        const blog = state.blogs.find((blog) => blog._id === id);
+        if (blog) {
+          blog.likes = likes;
+          blog.likedUsers = likedUsers;
+        }
+        if (state.selectedBlog?._id === id) {
+          state.selectedBlog.likes = likes;
+          state.selectedBlog.likedUsers = likedUsers;
+        }
       })
 
       // Delete blog

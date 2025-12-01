@@ -69,7 +69,6 @@ function AddBlog() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 1. Client-Side Validation Check
     const errors = {};
     if (title.trim().length < 5)
       errors.title = "Title must be at least 5 characters.";

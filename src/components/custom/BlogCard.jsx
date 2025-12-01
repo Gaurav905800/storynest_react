@@ -1,7 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import { Heart } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { likeBlog } from "../../redux/slice/blogSlice";
 
 function BlogCard({ post }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.auth);
+  const token = localStorage.getItem("token");
+
+  const isLiked = post.likedUsers?.includes(user?._id);
+
+  const handleLike = (e) => {
+    e.stopPropagation(); // prevents card navigation on button click
+    dispatch(likeBlog({ id: post._id, token }));
+  };
 
   return (
     <div
@@ -36,15 +50,20 @@ function BlogCard({ post }) {
           {post.content?.slice(0, 100)}...
         </p>
 
+        {/* Bottom Row */}
         <div className="flex justify-between items-center text-sm text-gray-500 mt-4">
           <span>{post.tags?.[0] || "Unknown"}</span>
-          <span>
-            {new Date(post.createdAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
+
+          {/* ❤️ Like Button */}
+          <div className="flex items-center gap-1" onClick={handleLike}>
+            <Heart
+              size={20}
+              className={`cursor-pointer ${
+                isLiked ? "fill-red-500 text-red-500" : "text-gray-500"
+              }`}
+            />
+            <span className="text-gray-700">{post.likes || 0}</span>
+          </div>
         </div>
       </div>
     </div>
